@@ -1,5 +1,6 @@
 // Publish task
 var path = require('path'),
+  fs = require('fs'),
   util = require('gulp-util'),
   gift = require('gift'),
   q = require('q'),
@@ -8,6 +9,8 @@ var path = require('path'),
 function parseOptions(options_) {
   options.folder = options_.folder || 'dist';
   options.branch = options_.branch || 'gh-pages';
+  options.ignore = options_.ignore || [];
+  options.ignore.push('.git', 'node_modules', 'bower_components', options_.folder);
   options.cname = options_.cname || 'CNAME';
   options.commit = options_.commit || 'Build '+(new Date());
   options.cwd = options_.cwd || process.cwd();
@@ -32,6 +35,15 @@ function buildBranch(options_) {
 
   // First, init repository in our dist dir
   gift.init(distRepoDir, function(err, repo) {
+
+    // Create .gitignore
+    fs.writeFile(distRepoDir + "/.gitignore", options.ignore.join('\n'), function(err) {
+        if(err) {
+            util.log("BuildBranch:", util.colors.red(err));
+        } else {
+            util.log("BuildBranch:", util.colors.blue(".gitignore has been created."));
+        }
+    });
 
     // Check if repo, which may exist already, has any changes.
     repo.status(function(err, status) {
