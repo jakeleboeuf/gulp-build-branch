@@ -10,7 +10,7 @@ function parseOptions(options_) {
   options.folder = options_.folder || 'dist';
   options.branch = options_.branch || 'gh-pages';
   options.ignore = options_.ignore || [];
-  options.ignore.push('.git', 'node_modules', 'bower_components', options_.folder);
+  options.ignore.push('.DS_Store', '.git', 'node_modules', 'bower_components');
   options.cname = options_.cname || 'CNAME';
   options.commit = options_.commit || 'Build '+(new Date());
   options.cwd = options_.cwd || process.cwd();
